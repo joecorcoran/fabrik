@@ -12,7 +12,9 @@ module Fabrik
 
     def compose!(dict)
       dict.each do |name, method|
-        self.send(:define_method, name, method)
+        unless self.instance_methods(false).include?(name)
+          self.send(:define_method, name, method)
+        end
       end
     end
   end

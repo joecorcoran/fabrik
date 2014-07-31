@@ -29,12 +29,12 @@ end
 class Child < Parent
   extend Fabrik::Composer
 
-  compose({ trait: Trait1, aliases: { z: :q } },
-          { trait: Trait2, exclude: :y })
-
   def x
     1
   end
+
+  compose({ trait: Trait1, aliases: { z: :q } },
+          { trait: Trait2, exclude: :y })
 end
 
 describe Fabrik do
