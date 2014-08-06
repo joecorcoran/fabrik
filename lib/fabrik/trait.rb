@@ -2,19 +2,22 @@ module Fabrik
   class Trait
     attr_reader :provided
 
-    def initialize(mod, &definition)
-      @mod, @provided = mod, Set.new
+    def initialize(&definition)
+      @provided = Set.new
       self.instance_eval(&definition) if definition
     end
 
-    def provides(*names)
-      @provided.merge(names)
+    def provides(mod, *names)
+      names.each do |name|
+        @provided.add([mod, name])
+      end
     end
 
     def dictionary(opts = {})
       dict = Hash[
-        @provided.map do |name|
-          [name, @mod.instance_method(name)]
+        @provided.map do |pair|
+          mod, name = pair
+          [name, mod.instance_method(name)]
         end
       ]
       dict = apply_exclusions(dict, Array(opts[:exclude])) if opts[:exclude]

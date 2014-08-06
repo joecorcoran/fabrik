@@ -1,14 +1,19 @@
 require 'spec_helper'
 require 'fabrik'
 
+module ModuleA
+  def a; :a end
+end
+
 module Module1
   def x; 1 end
   def y; w end
   def z; 2 end
 end
 
-Trait1 = Fabrik::Trait.new(Module1) do
-  provides :x, :y, :z
+Trait1 = Fabrik::Trait.new do
+  provides ModuleA, :a
+  provides Module1, :x, :y, :z
 end
 
 module Module2
@@ -18,8 +23,9 @@ module Module2
   def z; q + 1 end
 end
 
-Trait2 = Fabrik::Trait.new(Module2) do
-  provides :w, :x, :y, :z
+Trait2 = Fabrik::Trait.new do
+  provides ModuleA, :a
+  provides Module2, :w, :x, :y, :z
 end
 
 class Parent
@@ -39,6 +45,10 @@ end
 
 describe Fabrik do
   let(:child) { Child.new }
+
+  specify 'no conflict if two traits provide same exact method' do
+    expect(child.a).to eq(:a)
+  end
 
   specify 'trait method takes precedence over inherited method' do
     expect(child.w).to eq(9)
