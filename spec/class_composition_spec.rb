@@ -7,13 +7,12 @@ describe 'Class composition' do
     A method provided by a trait takes precedence over a method inherited
     from a parent class
   } do
-    m = Module.new        { def a; 1 end }
-    t = Class.new         { extend(Fabrik::Trait); provides_from(m, :a) }
+    m = Module.new   { def a; 1 end }
+    t = Class.new    { extend(Fabrik::Trait); provides_from(m, :a) }
+    x = Class.new    { def a; 2 end }
+    y = Class.new(x) { extend(Fabrik::Composer); compose(t.trait!) }
 
-    parent = Class.new         { def a; 2 end }
-    child = Class.new(parent) { extend(Fabrik::Composer); compose(t.trait!) }
-
-    expect(child.new.a).to eq(1)
+    expect(y.new.a).to eq(1)
   end
 
   specify %Q{
