@@ -20,17 +20,18 @@ describe Fabrik::Trait do
       expect(trait_klass.dictionary).to receive(:method_map).with(opts)
       trait_klass.trait!(opts)
     end
+
+    it 'calls provides_from with instance method names from own module' do
+      trait_klass.provides { def a; end }
+      expect(trait_klass).to receive(:provides_from).with(trait_klass.own, :a)
+      trait_klass.trait!
+    end
   end
 
   describe '.provides' do
     it 'evaluates block in context of own module' do
       trait_klass.provides { def a; end }
       expect(trait_klass.own.instance_methods).to include :a
-    end
-
-    it 'calls provides from with instance method names from own module' do
-      expect(trait_klass).to receive(:provides_from).with(trait_klass.own, :a)
-      trait_klass.provides { def a; end }
     end
   end
 

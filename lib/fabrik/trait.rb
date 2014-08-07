@@ -1,15 +1,17 @@
+require 'fabrik/composer'
 require 'fabrik/dictionary'
 
 module Fabrik
   module Trait
+    include Composer
 
     def trait!(opts = {})
+      provides_from(own, *own.instance_methods)
       dictionary.method_map(opts)
     end
 
     def provides(&own_definition)
       own.module_eval(&own_definition)
-      provides_from(own, *own.instance_methods)
     end
 
     def provides_from(mod, *names)
