@@ -1,3 +1,5 @@
+require 'set'
+
 module Fabrik
   class Dictionary
 
