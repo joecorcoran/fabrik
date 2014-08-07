@@ -14,6 +14,14 @@ describe Fabrik::Trait do
     Class.new.extend(Fabrik::Trait)
   end
 
+  describe '.trait!' do
+    it 'returns the methods from the dictionary' do
+      opts = {}
+      expect(trait_klass.dictionary).to receive(:methods).with(opts)
+      trait_klass.trait!(opts)
+    end
+  end
+
   describe '.provides_from' do
     it 'stores pairs in dictionary' do
       expect(trait_klass.dictionary).to receive(:add).with([mod, :a]).once
