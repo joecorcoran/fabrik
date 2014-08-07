@@ -9,7 +9,7 @@ module Fabrik
       @pairs.add(pair)
     end
 
-    def methods(opts = {})
+    def method_map(opts = {})
       exclude = Array(opts[:exclude])
       aliases = opts.fetch(:aliases, {})
 

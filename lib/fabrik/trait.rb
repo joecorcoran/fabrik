@@ -4,7 +4,7 @@ module Fabrik
   module Trait
 
     def trait!(opts = {})
-      dictionary.methods(opts)
+      dictionary.method_map(opts)
     end
 
     def provides_from(mod, *names)

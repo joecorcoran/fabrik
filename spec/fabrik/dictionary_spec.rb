@@ -12,40 +12,40 @@ describe Fabrik::Dictionary do
 
   let(:dictionary) { Fabrik::Dictionary.new }
 
-  describe '.methods' do
+  describe '.method_map' do
     before do
       dictionary.add([mod, :a])
       dictionary.add([mod, :b])
     end
     it 'returns hash mapping method names to unbound methods' do
-      expect(dictionary.methods).to eq(
+      expect(dictionary.method_map).to eq(
         a: mod.instance_method(:a), b: mod.instance_method(:b)
       )
     end
 
     it 'applies exclusions if opts includes :exclude' do
       expect(dictionary).to receive(:apply_exclusions)
-                         .with(dictionary.methods, [:a])
+                         .with(dictionary.method_map, [:a])
                          .and_call_original
-      expect(dictionary.methods(exclude: [:a])).to eq(
+      expect(dictionary.method_map(exclude: [:a])).to eq(
         b: mod.instance_method(:b)
       )
     end
 
     it 'applies exclusions if opts includes :exclude with singular value' do
       expect(dictionary).to receive(:apply_exclusions)
-                         .with(dictionary.methods, [:a])
+                         .with(dictionary.method_map, [:a])
                          .and_call_original
-      expect(dictionary.methods(exclude: :a)).to eq(
+      expect(dictionary.method_map(exclude: :a)).to eq(
         b: mod.instance_method(:b)
       )
     end
 
     it 'applies aliases if opts includes :aliases' do
       expect(dictionary).to receive(:apply_aliases).with(
-        dictionary.methods, a: :z
+        dictionary.method_map, a: :z
       )
-      dictionary.methods(aliases: { a: :z })
+      dictionary.method_map(aliases: { a: :z })
     end
   end
 

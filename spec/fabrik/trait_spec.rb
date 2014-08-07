@@ -15,9 +15,9 @@ describe Fabrik::Trait do
   end
 
   describe '.trait!' do
-    it 'returns the methods from the dictionary' do
+    it 'returns the method map from the dictionary' do
       opts = {}
-      expect(trait_klass.dictionary).to receive(:methods).with(opts)
+      expect(trait_klass.dictionary).to receive(:method_map).with(opts)
       trait_klass.trait!(opts)
     end
   end
