@@ -7,8 +7,7 @@ describe 'Class composition' do
     A method provided by a trait takes precedence over a method inherited
     from a parent class
   } do
-    m = Module.new   { def a; 1 end }
-    t = Class.new    { extend(Fabrik::Trait); provides_from(m, :a) }
+    t = Class.new    { extend(Fabrik::Trait); provides { def a; 1 end } }
     x = Class.new    { def a; 2 end }
     y = Class.new(x) { extend(Fabrik::Composer); compose(t.trait!) }
 
@@ -19,12 +18,11 @@ describe 'Class composition' do
     A method defined in a composing class takes precedence over a method
     provided by a trait
   } do
-    m = Module.new { def a; 1 end }
-    t = Class.new  { extend(Fabrik::Trait); provides_from(m, :a) }
+    t = Class.new { extend(Fabrik::Trait); provides { def a; 1 end } }
     klass = Class.new do
-      extend(Fabrik::Composer)
+      extend Fabrik::Composer
       def a; 2 end
-      compose(t.trait!)
+      compose t.trait!
     end
 
     expect(klass.new.a).to eq (2)
@@ -33,30 +31,24 @@ describe 'Class composition' do
   specify %Q{
     Methods can be excluded from traits by a composing class to avoid conflicts
   } do
-    m1 = Module.new { def a; 1 end }
-    t1 = Class.new  { extend(Fabrik::Trait); provides_from m1, :a }
-
-    m2 = Module.new { def a; 2 end }
-    t2 = Class.new  { extend(Fabrik::Trait); provides_from m2, :a }
+    t1 = Class.new { extend(Fabrik::Trait); provides { def a; 1 end } }
+    t2 = Class.new { extend(Fabrik::Trait); provides { def a; 2 end } }
 
     klass = Class.new do
-      extend(Fabrik::Composer)
-      compose(t1.trait!(exclude: :a), t2.trait!)
+      extend Fabrik::Composer
+      compose t1.trait!(exclude: :a), t2.trait!
     end
 
     expect(klass.new.a).to eq(2)
   end
 
   specify 'Methods can be aliased by a composing class to avoid conflicts' do
-    m1 = Module.new { def a; 1 end }
-    t1 = Class.new  { extend(Fabrik::Trait); provides_from m1, :a }
-
-    m2 = Module.new { def a; 2 end }
-    t2 = Class.new  { extend(Fabrik::Trait); provides_from m2, :a }
+    t1 = Class.new { extend(Fabrik::Trait); provides { def a; 1 end } }
+    t2 = Class.new { extend(Fabrik::Trait); provides { def a; 2 end } }
 
     klass = Class.new do
-      extend(Fabrik::Composer)
-      compose(t1.trait!, t2.trait!(aliases: { a: :z }))
+      extend Fabrik::Composer
+      compose t1.trait!, t2.trait!(aliases: { a: :z })
     end
 
     expect(klass.new.a).to eq(1)
@@ -69,8 +61,8 @@ describe 'Class composition' do
     t2 = Class.new  { extend(Fabrik::Trait); provides_from m, :a }
 
     klass = Class.new do
-      extend(Fabrik::Composer)
-      compose(t1.trait!, t2.trait!)
+      extend Fabrik::Composer
+      compose t1.trait!, t2.trait!
     end
 
     expect(klass.new.a).to eq(1)
