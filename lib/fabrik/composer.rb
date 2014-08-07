@@ -2,11 +2,7 @@ require 'fabrik/resolver'
 
 module Fabrik
   module Composer
-    def compose(*trait_opts)
-      dicts = trait_opts.map do |opts|
-        trait = opts.delete(:trait)
-        trait.dictionary(opts)
-      end
+    def compose(*dicts)
       compose!(Resolver.new(dicts).dictionary!)
     end
 

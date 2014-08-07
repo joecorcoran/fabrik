@@ -1,13 +1,13 @@
 module Fabrik
-  class Trait
+  module Trait
     attr_reader :provided
 
-    def initialize(&definition)
-      @provided = Set.new
-      self.instance_eval(&definition) if definition
+    def trait!(opts = {})
+      dictionary(opts)
     end
 
-    def provides(mod, *names)
+    def provides_from(mod, *names)
+      @provided ||= Set.new
       names.each do |name|
         @provided.add([mod, name])
       end

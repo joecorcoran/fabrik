@@ -10,62 +10,76 @@ describe Fabrik::Trait do
     end
   end
 
-  let(:trait) { Fabrik::Trait.new }
+  let(:trait_klass) do
+    Class.new.extend(Fabrik::Trait)
+  end
 
-  describe '#provides' do
+  describe '.provides_from' do
     it 'stores names in provided' do
-      trait.provides(M, :a)
-      expect(trait.provided.include?(:a))
+      trait_klass.provides_from(M, :a)
+
+      expect(trait_klass.provided.include?(:a))
     end
 
     it 'does not overwrite or duplicate names when used more than once' do
-      trait.provides(M, :a)
-      trait.provides(M, :a)
-      expect(trait.provided.length).to eq(1)
+      trait_klass.provides_from(M, :a)
+      trait_klass.provides_from(M, :a)
+
+      expect(trait_klass.provided.length).to eq(1)
     end
   end
 
-  describe '#dictionary' do
+  describe '.dictionary' do
     it 'returns hash mapping method names to unbound methods' do
-      trait.provides(M, :a, :b)
-      expect(trait.dictionary).to eq(
+      trait_klass.provides_from(M, :a, :b)
+
+      expect(trait_klass.dictionary).to eq(
         a: M.instance_method(:a), b: M.instance_method(:b)
       )
     end
 
     it 'applies exclusions if opts includes :exclude' do
-      trait.provides(M, :a, :b)
-      expect(trait).to receive(:apply_exclusions)
-                         .with(trait.dictionary, [:a])
+      trait_klass.provides_from(M, :a, :b)
+
+      expect(trait_klass).to receive(:apply_exclusions)
+                         .with(trait_klass.dictionary, [:a])
                          .and_call_original
-      expect(trait.dictionary(exclude: [:a])).to eq(b: M.instance_method(:b))
+      expect(trait_klass.dictionary(exclude: [:a])).to eq(
+        b: M.instance_method(:b)
+      )
     end
 
     it 'applies exclusions if opts includes :exclude with singular value' do
-      trait.provides(M, :a, :b)
-      expect(trait).to receive(:apply_exclusions)
-                         .with(trait.dictionary, [:a])
+      trait_klass.provides_from(M, :a, :b)
+
+      expect(trait_klass).to receive(:apply_exclusions)
+                         .with(trait_klass.dictionary, [:a])
                          .and_call_original
-      expect(trait.dictionary(exclude: :a)).to eq(b: M.instance_method(:b))
+      expect(trait_klass.dictionary(exclude: :a)).to eq(
+        b: M.instance_method(:b)
+      )
     end
 
     it 'applies aliases if opts includes :aliases' do
-      trait.provides(M, :a, :b)
-      expect(trait).to receive(:apply_aliases).with(trait.dictionary, a: :z)
-      trait.dictionary(aliases: { a: :z })
+      trait_klass.provides_from(M, :a, :b)
+
+      expect(trait_klass).to receive(:apply_aliases).with(
+        trait_klass.dictionary, a: :z
+      )
+      trait_klass.dictionary(aliases: { a: :z })
     end
   end
 
   describe '#apply_exclusions' do
     it 'returns hash without the excluded keys' do
-      expect(trait.apply_exclusions({a: 1, b: 2}, [:a])).to eq(b: 2)
+      expect(trait_klass.apply_exclusions({a: 1, b: 2}, [:a])).to eq(b: 2)
     end
   end
 
   describe '#apply_aliases' do
     it 'returns hash with keys aliased' do
       expect(
-        trait.apply_aliases({a: 1, b: 2}, {b: :z})
+        trait_klass.apply_aliases({a: 1, b: 2}, {b: :z})
       ).to eq(a: 1, z: 2)
     end
   end
