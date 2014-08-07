@@ -29,6 +29,20 @@ describe 'Class composition' do
   end
 
   specify %Q{
+    An error is thrown when composing two different methods under the same name
+  } do
+    t1 = Class.new { extend(Fabrik::Trait); provides { def a; 1 end } }
+    t2 = Class.new { extend(Fabrik::Trait); provides { def a; 2 end } }
+
+    klass = Class.new do
+      extend Fabrik::Composer
+      compose t1.trait!, t2.trait!
+    end
+
+    expect { klass.new.a }.to raise_error(Fabrik::ConflictingMethod)
+  end
+
+  specify %Q{
     Methods can be excluded from traits by a composing class to avoid conflicts
   } do
     t1 = Class.new { extend(Fabrik::Trait); provides { def a; 1 end } }
