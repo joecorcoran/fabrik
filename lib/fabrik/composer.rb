@@ -9,10 +9,6 @@ module Fabrik
 
     private
 
-      def _target
-        self.is_a?(Trait) ? self.own : self
-      end
-
       def _resolve(method_maps)
         method_maps.reduce({}) do |result, method_map|
           result.merge!(method_map) do |name, m1, m2|
@@ -23,8 +19,8 @@ module Fabrik
 
       def _compose!(method_map)
         method_map.each do |name, method|
-          unless _target.instance_methods(false).include?(name)
-            _target.send(:define_method, name, method)
+          unless self.instance_methods(false).include?(name)
+            self.send(:define_method, name, method)
           end
         end
       end

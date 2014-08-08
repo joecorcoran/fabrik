@@ -1,9 +1,13 @@
 require 'fabrik/composer'
 require 'fabrik/dictionary'
+require 'forwardable'
 
 module Fabrik
   module Trait
     include Composer
+
+    extend Forwardable
+    def_delegators :own, :instance_methods, :send
 
     def trait!(opts = {})
       provides_from(own, *own.instance_methods)
