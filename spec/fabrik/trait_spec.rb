@@ -14,17 +14,17 @@ describe Fabrik::Trait do
     Class.new.extend(Fabrik::Trait)
   end
 
-  describe '.trait!' do
+  describe '.methods!' do
     it 'returns the method map from the dictionary' do
       opts = {}
       expect(trait_klass.dictionary).to receive(:method_map).with(opts)
-      trait_klass.trait!(opts)
+      trait_klass.methods!(opts)
     end
 
     it 'calls provides_from with instance method names from own module' do
       trait_klass.provides { def a; end }
       expect(trait_klass).to receive(:provides_from).with(trait_klass.own, :a)
-      trait_klass.trait!
+      trait_klass.methods!
     end
   end
 

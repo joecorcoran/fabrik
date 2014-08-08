@@ -11,11 +11,11 @@ describe 'Trait composition' do
     t2 = Class.new do
       extend Fabrik::Trait
       provides { def a; 2 end }
-      compose t1.trait!
+      compose t1.methods!
     end
     klass = Class.new do
       extend Fabrik::Composer
-      compose t2.trait!
+      compose t2.methods!
     end
 
     expect(klass.new.a).to eq (2)
@@ -28,12 +28,12 @@ describe 'Trait composition' do
     t2 = Class.new { extend(Fabrik::Trait); provides { def a; 2 end } }
     t3 = Class.new do
       extend Fabrik::Trait
-      compose t1.trait!, t2.trait!
+      compose t1.methods!, t2.methods!
     end
 
     klass = Class.new do
       extend Fabrik::Composer
-      compose t3.trait!
+      compose t3.methods!
     end
 
     expect { klass.new.a }.to raise_error(Fabrik::ConflictingMethod)
@@ -46,11 +46,11 @@ describe 'Trait composition' do
     t2 = Class.new { extend(Fabrik::Trait); provides { def a; 2 end } }
     t3 = Class.new do
       extend Fabrik::Trait
-      compose t1.trait!, t2.trait!(exclude: :a)
+      compose t1.methods!, t2.methods!(exclude: :a)
     end
     klass = Class.new do
       extend Fabrik::Composer
-      compose t3.trait!
+      compose t3.methods!
     end
 
     expect(klass.new.a).to eq (1)
@@ -61,11 +61,11 @@ describe 'Trait composition' do
     t2 = Class.new { extend(Fabrik::Trait); provides { def a; 2 end } }
     t3 = Class.new do
       extend Fabrik::Trait
-      compose t1.trait!, t2.trait!(aliases: { a: :z })
+      compose t1.methods!, t2.methods!(aliases: { a: :z })
     end
     klass = Class.new do
       extend Fabrik::Composer
-      compose t3.trait!
+      compose t3.methods!
     end
 
     expect(klass.new.a).to eq (1)
@@ -78,11 +78,11 @@ describe 'Trait composition' do
     t2 = Class.new  { extend(Fabrik::Trait); provides_from m, :a }
     t3 = Class.new do
       extend Fabrik::Trait
-      compose t1.trait!, t2.trait!
+      compose t1.methods!, t2.methods!
     end
     klass = Class.new do
       extend Fabrik::Composer
-      compose t3.trait!
+      compose t3.methods!
     end
 
     expect(klass.new.a).to eq(1)

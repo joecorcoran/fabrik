@@ -9,7 +9,7 @@ describe 'Class composition' do
   } do
     t = Class.new    { extend(Fabrik::Trait); provides { def a; 1 end } }
     x = Class.new    { def a; 2 end }
-    y = Class.new(x) { extend(Fabrik::Composer); compose(t.trait!) }
+    y = Class.new(x) { extend(Fabrik::Composer); compose(t.methods!) }
 
     expect(y.new.a).to eq(1)
   end
@@ -22,7 +22,7 @@ describe 'Class composition' do
     klass = Class.new do
       extend Fabrik::Composer
       def a; 2 end
-      compose t.trait!
+      compose t.methods!
     end
 
     expect(klass.new.a).to eq (2)
@@ -36,7 +36,7 @@ describe 'Class composition' do
 
     klass = Class.new do
       extend Fabrik::Composer
-      compose t1.trait!, t2.trait!
+      compose t1.methods!, t2.methods!
     end
 
     expect { klass.new.a }.to raise_error(Fabrik::ConflictingMethod)
@@ -50,7 +50,7 @@ describe 'Class composition' do
 
     klass = Class.new do
       extend Fabrik::Composer
-      compose t1.trait!(exclude: :a), t2.trait!
+      compose t1.methods!(exclude: :a), t2.methods!
     end
 
     expect(klass.new.a).to eq(2)
@@ -62,7 +62,7 @@ describe 'Class composition' do
 
     klass = Class.new do
       extend Fabrik::Composer
-      compose t1.trait!, t2.trait!(aliases: { a: :z })
+      compose t1.methods!, t2.methods!(aliases: { a: :z })
     end
 
     expect(klass.new.a).to eq(1)
@@ -76,7 +76,7 @@ describe 'Class composition' do
 
     klass = Class.new do
       extend Fabrik::Composer
-      compose t1.trait!, t2.trait!
+      compose t1.methods!, t2.methods!
     end
 
     expect(klass.new.a).to eq(1)
