@@ -41,7 +41,10 @@ describe Fabrik::Composer do
         compose t1.methods!, t2.methods!
       end
 
-      expect { klass.new.a }.to raise_error(Fabrik::ConflictingMethod)
+      expect { klass.new.a }.to raise_error(
+        Fabrik::ConflictingMethods,
+        /both provide methods named :a$/
+      )
     end
 
     specify %Q{
@@ -121,7 +124,10 @@ describe Fabrik::Composer do
         compose t3.methods!
       end
 
-      expect { klass.new.a }.to raise_error(Fabrik::ConflictingMethod)
+      expect { klass.new.a }.to raise_error(
+        Fabrik::ConflictingMethods,
+        /both provide methods named :a$/
+      )
     end
 
     specify %Q{

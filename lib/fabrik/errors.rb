@@ -1,3 +1,3 @@
 module Fabrik
-  class ConflictingMethod < NotImplementedError; end
+  class ConflictingMethods < NotImplementedError; end
 end
