@@ -19,15 +19,17 @@ module Fabrik
 
     def conflict_method(name, m1, m2)
       resolver, @conflicts[name] = self, [m1, m2]
-      mod = Module.new do
-        send(:define_method, name) do
-          m1, m2 = resolver.conflicts[name]
-          raise ConflictingMethods.new(
-            "#{m1.owner} and #{m2.owner} both provide methods named :#{name}"
-          )
-        end
+      own.send(:define_method, name) do
+        m1, m2 = resolver.conflicts[name]
+        raise ConflictingMethods.new(
+          "#{m1.owner} and #{m2.owner} both provide methods named :#{name}"
+        )
       end
-      mod.instance_method(name)
+      own.instance_method(name)
+    end
+
+    def own
+      @own ||= Module.new
     end
 
   end
