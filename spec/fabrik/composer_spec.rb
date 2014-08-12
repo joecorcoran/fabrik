@@ -11,7 +11,7 @@ describe Fabrik::Composer do
     } do
       t = Class.new    { extend(Fabrik::Trait); provides { def a; 1 end } }
       x = Class.new    { def a; 2 end }
-      y = Class.new(x) { extend(Fabrik::Composer); compose(t.methods) }
+      y = Class.new(x) { extend(Fabrik::Composer); compose(t) }
 
       expect(y.new.a).to eq(1)
     end
