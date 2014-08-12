@@ -24,7 +24,7 @@ describe Fabrik::Composer do
       klass = Class.new do
         extend Fabrik::Composer
         def a; 2 end
-        compose t.methods!
+        compose t
       end
 
       expect(klass.new.a).to eq (2)
@@ -38,7 +38,7 @@ describe Fabrik::Composer do
 
       klass = Class.new do
         extend Fabrik::Composer
-        compose t1.methods!, t2.methods!
+        compose t1, t2
       end
 
       expect { klass.new.a }.to raise_error(
@@ -55,7 +55,7 @@ describe Fabrik::Composer do
 
       klass = Class.new do
         extend Fabrik::Composer
-        compose t1.methods!(exclude: :a), t2.methods!
+        compose t1.methods!(exclude: :a), t2
       end
 
       expect(klass.new.a).to eq(2)
@@ -67,7 +67,7 @@ describe Fabrik::Composer do
 
       klass = Class.new do
         extend Fabrik::Composer
-        compose t1.methods!, t2.methods!(aliases: { a: :z })
+        compose t1, t2.methods!(aliases: { a: :z })
       end
 
       expect(klass.new.a).to eq(1)
@@ -81,7 +81,7 @@ describe Fabrik::Composer do
 
       klass = Class.new do
         extend Fabrik::Composer
-        compose t1.methods!, t2.methods!
+        compose t1, t2
       end
 
       expect(klass.new.a).to eq(1)
@@ -99,11 +99,11 @@ describe Fabrik::Composer do
       t2 = Class.new do
         extend Fabrik::Trait
         provides { def a; 2 end }
-        compose t1.methods!
+        compose t1
       end
       klass = Class.new do
         extend Fabrik::Composer
-        compose t2.methods!
+        compose t2
       end
 
       expect(klass.new.a).to eq (2)
@@ -116,12 +116,12 @@ describe Fabrik::Composer do
       t2 = Class.new { extend(Fabrik::Trait); provides { def a; 2 end } }
       t3 = Class.new do
         extend Fabrik::Trait
-        compose t1.methods!, t2.methods!
+        compose t1, t2
       end
 
       klass = Class.new do
         extend Fabrik::Composer
-        compose t3.methods!
+        compose t3
       end
 
       expect { klass.new.a }.to raise_error(
@@ -137,11 +137,11 @@ describe Fabrik::Composer do
       t2 = Class.new { extend(Fabrik::Trait); provides { def a; 2 end } }
       t3 = Class.new do
         extend Fabrik::Trait
-        compose t1.methods!, t2.methods!(exclude: :a)
+        compose t1, t2.methods!(exclude: :a)
       end
       klass = Class.new do
         extend Fabrik::Composer
-        compose t3.methods!
+        compose t3
       end
 
       expect(klass.new.a).to eq (1)
@@ -152,11 +152,11 @@ describe Fabrik::Composer do
       t2 = Class.new { extend(Fabrik::Trait); provides { def a; 2 end } }
       t3 = Class.new do
         extend Fabrik::Trait
-        compose t1.methods!, t2.methods!(aliases: { a: :z })
+        compose t1, t2.methods!(aliases: { a: :z })
       end
       klass = Class.new do
         extend Fabrik::Composer
-        compose t3.methods!
+        compose t3
       end
 
       expect(klass.new.a).to eq (1)
@@ -169,11 +169,11 @@ describe Fabrik::Composer do
       t2 = Class.new  { extend(Fabrik::Trait); provides_from m, :a }
       t3 = Class.new do
         extend Fabrik::Trait
-        compose t1.methods!, t2.methods!
+        compose t1, t2
       end
       klass = Class.new do
         extend Fabrik::Composer
-        compose t3.methods!
+        compose t3
       end
 
       expect(klass.new.a).to eq(1)
