@@ -9,7 +9,7 @@ module Fabrik
     extend Forwardable
     def_delegators :own, :instance_methods, :send
 
-    def methods!(opts = {})
+    def methods(opts = {})
       provides_from(own, *own.instance_methods)
       dictionary.method_map(opts)
     end

@@ -4,7 +4,7 @@ module Fabrik
   module Composer
 
     def compose(*method_maps)
-      method_maps.map! { |m| Hash === m ? m : m.methods! }
+      method_maps.map! { |m| Hash === m ? m : m.methods }
       resolved_method_map = Resolver.new(method_maps).resolved_method_map
       resolved_method_map.each do |name, method|
         unless self.instance_methods(false).include?(name)
