@@ -21,6 +21,12 @@ describe Fabrik::Trait do
       trait_klass.methods(opts)
     end
 
+    it 'is aliased as .[]' do
+      opts = {}
+      expect(trait_klass.dictionary).to receive(:method_map).with(opts)
+      trait_klass[opts]
+    end
+
     it 'calls provides_from with instance method names from own module' do
       trait_klass.provides { def a; end }
       expect(trait_klass).to receive(:provides_from).with(trait_klass.own, :a)

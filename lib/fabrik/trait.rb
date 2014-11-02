@@ -13,6 +13,7 @@ module Fabrik
       provides_from(own, *own.instance_methods)
       dictionary.method_map(opts)
     end
+    alias :[] :methods
 
     def provides(&own_definition)
       own.module_eval(&own_definition)
@@ -31,6 +32,6 @@ module Fabrik
     def dictionary
       @dictionary ||= Dictionary.new
     end
-    
+
   end
 end

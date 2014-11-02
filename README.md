@@ -71,8 +71,8 @@ composition, or by overriding in the composing class.
 class Tigon
   extend Fabrik::Composer
   compose Panthera,
-          Tiger.methods(exclude: :mother),
-          Lion.methods(exclude: :father)
+          Tiger[exclude: :mother],
+          Lion[exclude: :father]
 end
 ```
 
