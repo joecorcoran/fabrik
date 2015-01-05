@@ -49,6 +49,15 @@ class Lion
 end
 ```
 
+Alternatively a trait can be created with `Fabrik::Trait.build` method:
+
+```ruby
+Lion = Fabrik::Trait.build do
+  def mother; :lioness end
+  def father; :lion end
+end
+```
+
 A class uses traits by extending `Fabrik::Composer` and composing the traits.
 
 ```ruby
@@ -81,6 +90,27 @@ tigon = Tigon.new
 tigon.roar    # => :roar!
 tigon.mother  # => :lioness
 tigon.father  # => :tiger
+```
+
+Traits can be composed from other traits in the same way:
+
+```ruby
+class TigonTrait
+  extend Fabrik::Trait
+  compose Panthera,
+          Tiger[exclude: :mother],
+          Lion[exclude: :father]
+end
+```
+
+Alternatively `.build` method can be used:
+
+```ruby
+TigonTrait = Fabrik::Trait.build(Panthera,
+                                 Tiger[exclude: :mother],
+                                 Lion[exclude: :father]) do
+  def scratch; :scratched end
+end
 ```
 
 View the specs for further examples, including composable traits and traits
