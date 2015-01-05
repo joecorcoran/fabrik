@@ -9,6 +9,14 @@ module Fabrik
     extend Forwardable
     def_delegators :own, :instance_methods, :send
 
+    def self.build(*args, &blk)
+      Class.new do
+        extend Trait
+        compose(*args) if args.count > 0
+        provides(&blk) if blk
+      end
+    end
+
     def methods(opts = {})
       provides_from(own, *own.instance_methods)
       dictionary.method_map(opts)
