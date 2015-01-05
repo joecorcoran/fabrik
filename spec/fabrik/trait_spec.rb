@@ -14,6 +14,39 @@ describe Fabrik::Trait do
     Class.new.extend(Fabrik::Trait)
   end
 
+  describe '::build' do
+    it 'allows to build a trait class' do
+      trait_klass = Fabrik::Trait.build do
+        def a; end
+      end
+
+      expect(trait_klass.own.instance_methods).to include(:a)
+    end
+
+    it 'allows to compose different traits' do
+      trait_a = Fabrik::Trait.build do
+        def a; :a end
+        def c; :c end
+      end
+
+      trait_b = Fabrik::Trait.build do
+        def a; :ab end
+        def b; :bc end
+      end
+
+      trait_c = Fabrik::Trait.build do
+        def b; :cd end
+      end
+
+      trait_klass = Fabrik::Trait.build(trait_c, trait_b[exclude: :b], trait_a[exclude: :a])
+      klass = Class.new.extend(Fabrik::Composer)
+      klass.compose(trait_klass)
+      instance = klass.new
+
+      expect([instance.a, instance.b, instance.c]).to eq([:ab, :cd, :c])
+    end
+  end
+
   describe '.methods' do
     it 'returns the method map from the dictionary' do
       opts = {}
