@@ -49,7 +49,7 @@ class Lion
 end
 ```
 
-Alternatively a trait can be created with `Fabrik::Trait.build` method:
+Alternatively, a trait can be created with `Fabrik::Trait.build`.
 
 ```ruby
 Lion = Fabrik::Trait.build do
@@ -103,12 +103,10 @@ class TigonTrait
 end
 ```
 
-Alternatively `.build` method can be used:
+Or by using `.build`:
 
 ```ruby
-TigonTrait = Fabrik::Trait.build(Panthera,
-                                 Tiger[exclude: :mother],
-                                 Lion[exclude: :father]) do
+TigonTrait = Fabrik::Trait.build(Panthera, Tiger[exclude: :mother], Lion[exclude: :father]) do
   def scratch; :scratched end
 end
 ```
