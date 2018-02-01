@@ -1,8 +1,6 @@
 # Testing opt-in
 version: "= 0"
 
-language: ruby
-
 rvm:
   - 2.0
   - 2.1
